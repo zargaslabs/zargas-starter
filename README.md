@@ -37,6 +37,25 @@ npm install
 npm run dev
 ```
 
+## Netlify deploy
+
+GitHub bağlantısı kurulana kadar (veya CI dışında elle deploy gerektiğinde):
+
+```bash
+cd frontend   # ÖNEMLİ: repo kökünden değil, frontend/ içinden çalıştır
+netlify deploy --prod --build
+```
+
+**Bilinen CLI hatası:** `netlify.toml`'daki `base = "frontend"` ayarıyla birlikte
+`netlify deploy --build` (veya `netlify build`) **repo kökünden** çalıştırılırsa,
+CLI `publish` yolunu `base` ile birleştirmeden çözüyor (`repo/.next` arıyor,
+`repo/frontend/.next` yerine) → plugin "publish directory not found" hatası verir
+ya da (ham `--dir` ile aşılırsa) SSR route'ları Function'a çevrilmediği için site
+404 döner. Tek çözüm: komutu **`frontend/` dizininin içinden** çalıştırmak — CLI
+o zaman `publish: .next`'i doğrudan CWD'ye göre çözüyor ve `@netlify/plugin-nextjs`
+Function'ları doğru bundluyor. Git entegrasyonu (Netlify'ın build sunucuları)
+bu hatadan etkilenmiyor, sadece yerel CLI deploy'unda görülüyor.
+
 ## Yapı
 
 ```

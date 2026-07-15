@@ -1,3 +1,7 @@
+# Yerel `netlify deploy --build` / `netlify build` MUTLAKA frontend/ içinden
+# çalıştırılmalı — repo kökünden çalıştırılırsa CLI publish yolunu base ile
+# birleştirmeden çözüyor (bkz. README.md "Netlify deploy"). Git entegrasyonu
+# (Netlify build sunucuları) bu hatadan etkilenmiyor.
 [build]
   base = "frontend"
   command = "npm run build"
