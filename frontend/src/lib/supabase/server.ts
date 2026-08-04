@@ -11,6 +11,10 @@ export async function createServerSupabaseClient() {
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
+      // Not: @supabase/ssr burada `flowType`'ı her zaman "pkce"ye sabitler,
+      // buradan verilen auth ayarını ezer — implicit'e geçirmeye çalışmayın.
+      // E-posta bağlantıları bu yüzden PKCE'ye takılmasın diye token_hash
+      // akışını kullanıyoruz (bkz. app/(auth)/auth/confirm/route.ts).
       cookies: {
         getAll() {
           return cookieStore.getAll();

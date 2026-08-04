@@ -89,6 +89,20 @@ export function AuthCallbackHandler() {
       const code = searchParams.get("code");
 
       if (code) {
+        // supabase-js'in `detectSessionInUrl` ayarı açık olduğu için client
+        // oluşturulurken code'u kendisi takas etmiş ve tek kullanımlık
+        // code_verifier'ı silmiş olabilir. Bu durumda ikinci bir takas denemesi
+        // her zaman hata verir; önce oturumun kurulup kurulmadığına bakıyoruz.
+        const {
+          data: { session: exchangedSession },
+        } = await supabase.auth.getSession();
+
+        if (exchangedSession) {
+          cleanCallbackUrl();
+          router.replace(getAuthTarget(type, nextPath));
+          return;
+        }
+
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (error) {
